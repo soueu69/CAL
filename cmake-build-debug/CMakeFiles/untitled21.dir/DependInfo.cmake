@@ -4,7 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "C:/Users/diogo/Desktop/untitled21/main.cpp" "C:/Users/diogo/Desktop/untitled21/cmake-build-debug/CMakeFiles/untitled21.dir/main.cpp.obj"
+  "/home/juan/Documents/FEUP/2-Ano/2-Sem/CAL/Proj/code/CAL/main.cpp" "/home/juan/Documents/FEUP/2-Ano/2-Sem/CAL/Proj/code/CAL/cmake-build-debug/CMakeFiles/untitled21.dir/main.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

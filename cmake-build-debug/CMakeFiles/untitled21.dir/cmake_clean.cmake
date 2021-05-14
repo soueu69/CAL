@@ -1,8 +1,6 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/untitled21.dir/main.cpp.obj"
-  "libuntitled21.dll.a"
-  "untitled21.exe"
-  "untitled21.exe.manifest"
+  "CMakeFiles/untitled21.dir/main.cpp.o"
+  "untitled21"
   "untitled21.pdb"
 )
 
