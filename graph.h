@@ -53,8 +53,20 @@ public:
         importance = importance1;
         x = x1;
         y = y1;
-    };
+    }
+    int outgoing_edges_size(){
+        return outgoing_edges.size();
+    }
 
+    Edge* get_edge(int x){
+        return outgoing_edges[x];
+    }
+
+    string get_outgoing_edges(){
+        for(int i=0;i<outgoing_edges.size();i++){
+            return outgoing_edges[i]->get_name();
+        }
+    }
 
     int get_ID(){
         return this->ID;
@@ -79,6 +91,8 @@ public:
     void add_edge(Edge* objeto){
         outgoing_edges.push_back(objeto);
     }
+
+
 
 };
 

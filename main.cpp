@@ -71,64 +71,65 @@ int main() {
         //cout << word << endl;
         linha.push_back(word);
         //cout<<linha.size()<<endl;
-        int id1= stoi(linha[0]);
-        int node1= stoi(linha[1]);
-        int node2= stoi(linha[2]);
+        int id1 = stoi(linha[0]);
+        int node1 = stoi(linha[1]);
+        int node2 = stoi(linha[2]);
 
-        Edge *objeto = new Edge( node1,node2,id1, linha[3]);
+        Edge *objeto = new Edge(node1, node2, id1, linha[3]);
 
         //cout<<objeto->get_name()<<"--------"<<objeto->get_1ID()<<"---------"<< objeto->get_2ID()<<endl;
+        /*
+        cout<<"...................."<<endl;
+        cout<<objeto->get_1ID()<<endl;
+        cout<< objeto->get_2ID()<<endl;
+        cout<<"------------------"<<endl;
+         */
 
-        edges.push_back(objeto);
+        for (int i = 0; i < graph.get_size(); i++) {
+            int value = graph.get_node(i)->get_ID();
+            if (value == objeto->get_1ID()) {
+                graph.get_node(i)->add_edge(objeto);
+            }
+            if (value == objeto->get_2ID()) {
+                graph.get_node(i)->add_edge(objeto);
+            }
+        }
 
-}
+
+    }
     infile2.close();
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
- /*
-    for(int i=0; i<edges.size();i++){
-        edges[i]->getinfo();
-        cout<<endl;
+    /*
+       for(int i=0; i<edges.size();i++){
+           edges[i]->getinfo();
+           cout<<endl;
+       }
+
+
+       for(int i=0;i<edges.size();i++){
+           edges[i]->get1ID();
+           cout<<endl;
+           edges[i]->get2D();
+           cout<<endl;
+           edges[i]->get_name();
+           cout<<endl;
+           edges[i]->get_streetID();
+       }
+        */
+
+
+    for (int x = 0; x < graph.get_size(); x++) {
+        cout<<"----------------------"<<endl;
+        cout<<"NODE: "<<graph.get_node(x)->get_name()<<endl;
+        cout<<"NUMBER OF OUTGOING EDGES: " <<graph.get_node(x)->outgoing_edges_size()<<endl;
+        for(int a=0;a<graph.get_node(x)->outgoing_edges_size();a++){
+            cout<<graph.get_node(x)->get_edge(a)->get_name()<<endl;
+        }
+
     }
-
-
-    for(int i=0;i<edges.size();i++){
-        edges[i]->get1ID();
-        cout<<endl;
-        edges[i]->get2D();
-        cout<<endl;
-        edges[i]->get_name();
-        cout<<endl;
-        edges[i]->get_streetID();
-    }
-     */
-
-
- for(int x =0; x<graph.get_size();x++){
-
-     //cout<<graph.get_node(x)->get_ID()<<"--------";
-     //cout<<graph.get_node(x)->get_name()<<"--------";
-     //cout<<graph.get_node(x)->get_importance()<<endl;
-
- }
-
- for(int i=0; i<edges.size();i++){
-     cout<<edges[i]->get_name()<<"--------"<<edges[i]->get_1ID()<<"---------"<< edges[i]->get_2ID()<<endl;
-
- }
-
-
-
-
-
-
-
-
-
-
 
 
 }
-
 
 
