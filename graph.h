@@ -8,35 +8,9 @@
 #include <utility>
 using namespace std;
 
-class Edge {
-private:
-    pair< int, int> unify;  //nodes
-    string name;
-    int ID_street;
-public:
-    Edge(int node1, int node2,int ID,string name1) {
-        this->unify.first = node1;
-        this->unify.second = node2;
-        this->ID_street = ID;
-        this->name = name1;
-    }
-
-    int get_1ID(){
-        return unify.first;
-    }
-
-    int get_2ID(){
-        return unify.second;
-    }
-    string get_name(){
-        return name;
-    }
-
-    int get_streetID(){
-        return ID_street;
-    }
-
-};
+class Node;
+class Edge;
+class Graph;
 
 class Node {
 private:
@@ -62,11 +36,12 @@ public:
         return outgoing_edges[x];
     }
 
-    string get_outgoing_edges(){
+    /*string get_outgoing_edges(){
         for(int i=0;i<outgoing_edges.size();i++){
             return outgoing_edges[i]->get_name();
         }
     }
+     */
 
     int get_ID(){
         return this->ID;
@@ -92,9 +67,57 @@ public:
         outgoing_edges.push_back(objeto);
     }
 
+};
 
+class Edge {
+private:
+    pair< int, int> unify;  //nodes
+    Node *node1;
+    Node *node2;
+    string name;
+    int ID_street;
+public:
+    Edge(int node1, int node2,int ID,string name1) {
+        this->unify.first = node1;
+        this->unify.second = node2;
+        this->ID_street = ID;
+        this->name = name1;
+    }
+
+    int get_1ID(){
+        return unify.first;
+    }
+
+    int get_2ID(){
+        return unify.second;
+    }
+    string get_name(){
+        return name;
+    }
+
+    int get_streetID(){
+        return ID_street;
+    }
+
+    Node *get_node1(){
+        return node1;
+    }
+
+    Node *get_node2(){
+        return node2;
+    }
+
+    void set_node1(Node *objet){
+        node1 =  objet;
+    }
+
+    void set_node2(Node *objet){
+        node2 =  objet;
+    }
 
 };
+
+
 
 class Graph{
     private:
@@ -111,8 +134,6 @@ class Graph{
         Node* get_node(int i){
             return  nodes[i];
         }
-
-
 
 };
 
