@@ -76,10 +76,10 @@ void menu(){
 }
 void checkloading(){
     for (int x = 0; x < graph.get_size(); x++) {
-        //cout<<"----------------------"<<endl;
-        //cout<<"MAIN NODE: "<<graph.get_node(x)->get_name()<<endl;
+        cout<<"----------------------"<<endl;
+        cout<<"MAIN NODE: "<<graph.get_node(x)->get_name()<<endl;
         //cout<<"COORDINATES:"<<graph.get_node(x)->get_x()<<","<<graph.get_node(x)->get_y()<<endl;
-        //cout<<"NUMBER OF OUTGOING EDGES: " <<graph.get_node(x)->outgoing_edges_size()<<endl;
+        cout<<"NUMBER OF OUTGOING EDGES: " <<graph.get_node(x)->outgoing_edges_size()<<endl;
         for(int a=0;a<graph.get_node(x)->outgoing_edges_size();a++){
             cout<<"EDGE: "<<graph.get_node(x)->get_edge(a)->get_streetID()<<" ";
             cout<<"EDGE: "<<graph.get_node(x)->get_edge(a)->get_name()<<" ";
