@@ -26,13 +26,10 @@ private:
     string importance;
     double x;
     double y;
-
     vector<Edge*> outgoing_edges;
 
-    bool visited;   // for path finding
-    Edge *path;     // for path finding
-    double dist;    // for path finding
-    int queueIndex = 0; // required by MutablePriorityQueue
+    double distance;
+    Node* prev;
 
 
 public:
@@ -44,6 +41,7 @@ public:
         x = x1;
         y = y1;
     }
+
     int outgoing_edges_size(){
         return outgoing_edges.size();
     }
@@ -76,12 +74,12 @@ public:
     void add_edge(Edge* objeto){
         outgoing_edges.push_back(objeto);
     }
-    void set_dist(double x){
-        dist=x;
-}
+
+
 
     friend class Graph;
     friend class MutablePriorityQueue<Node>;
+
 };
 
 class Edge {
@@ -93,13 +91,14 @@ private:
     Node *node1;
     Node *node2;
 
-
-    double capacity;
-    double cost;
-    double flow;
+    bool available = true;
 
     double distance_between_nodes;
 public:
+    friend class Graph;
+    friend class Node;
+    double getFlow() const;
+
     Edge(int node1, int node2,int ID,string name1) {
         this->unify.first = node1;
         this->unify.second = node2;
@@ -107,6 +106,10 @@ public:
         this->name = name1;
     }
 
+
+    void set_bool_false(){
+        available=false;
+    }
     int get_1ID(){
         return unify.first;
     }
@@ -153,6 +156,7 @@ public:
 class Graph{
     private:
         vector<Node*> nodes;
+        bool relax(Node *v, Node *w, Edge *e, double residual, double cost);
     public:
     void dijkstraShortestPath(Node *s);
 
@@ -169,36 +173,35 @@ class Graph{
         }
 };
 
+
 /*
-void Graph::dijkstraShortestPath(Node *s ) {   // s é o node inicial
-    for(auto v : vertexSet)   // vetor de nodes do grafo
-        v->dist = INF;        // dist do node é a distancia total ate este este node
-    s->dist = 0;              // a distancia do node atual é 0
-    MutablePriorityQueue<Vertex<T>> q;   //nova queue
-    q.insert(s);        //inserir o node inicial na queue
-    while( ! q.empty() ) {    //enquanto a queueu nao estivel vazia
-        auto v = q.extractMin();     //coloca em v um node retirado da queue
-        for (auto e : v->outgoing) {    //coloca em e todas as edges que saiem de v
-            auto oldDist = e->dest->dist;  // coloca em old dist
-            if (relax(v, e->dest, e, e->capacity - e->flow, e->cost)){
-                if (oldDist==INF)
-                    q.insert(e->dest);
-                else
-                    q.decreaseKey(e->dest);
-            }
-        }
-        for (auto e : v->incoming) {
-            auto oldDist = e->orig->dist;
-            if (relax(v, e->orig, e, e->flow, -e->cost)) {
-                if (oldDist == INF)
-                    q.insert(e->orig);
-                else
-                    q.decreaseKey(e->orig);
-            }
-        }
-    }
-}
+function Dijkstra(Graph, source):
+2:	for each vertex v in Graph:	// Initialization
+3:	dist[v] := infinity	// initial distance from source to vertex v is set to infinite
+4:	previous[v] := undefined	// Previous node in optimal path from source
+5:	dist[source] := 0	// Distance from source to source
+6:	Q := the set of all nodes in Graph	// all nodes in the graph are unoptimized - thus are in Q
+7:	while Q is not empty:	// main loop
+8:	u := node in Q with smallest dist[ ]
+9:	remove u from Q
+10:	for each neighbor v of u:	// where v has not yet been removed from Q.
+11:	alt := dist[u] + dist_between(u, v)
+12:	if alt < dist[v]	// Relax (u,v)
+13:	dist[v] := alt
+14:	previous[v] := u
+15:	return previous[ ]
  */
+
+
+void Graph::dijkstraShortestPath(Node *origin){
+
+
+}
+
+
+
+
+
 
 
 
