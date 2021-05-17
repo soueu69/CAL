@@ -31,7 +31,7 @@ void Select_Hospitals(){
         if(quantity<5000){
             for(int u=0;u<graph.get_size();u++){
                 if(graph.get_node(u)->get_ID()==id_hospital){
-                    graph.dijkstraShortestPath(graph.get_node(u));
+                    //graph.dijkstraShortestPath(graph.get_node(u));
                 }
             }
             cout<<"HERE WE CHECK THE IDEAL PATH MADE BY dijkstraShortestPath "<<endl;
