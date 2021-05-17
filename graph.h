@@ -192,11 +192,32 @@ function Dijkstra(Graph, source):
 15:	return previous[ ]
  */
 
-
+/*
 void Graph::dijkstraShortestPath(Node *origin){
-
-
+    origin->distance=0;         //source node distance is 0
+    MutablePriorityQueue<Node> q;
+    for(auto x: nodes ){        // nodes of the graph
+        if(x!=origin){
+            x->distance=INF;      // all other nodes are set to INF;
+            x->prev=NULL;          // node before the current one is NULL
+        }
+        q.insert(x);  // insert all nodes of the graph on the queue
+    }
+    while(!q.empty()){      // the main loop
+        auto u = q.extractMin();   // extracts one node from the queue
+        for(auto z : u->outgoing_edges)   { // all edges comming out of the node u
+            double alt = u->distance + z->calculate_distance();  // alt is the some of the nodes current distance plus each edges lenght
+            if(z->get_node1()!=u){
+                if(alt<z->get_node1()->distance){  //starting to get confused
+                    z->get_node1()->distance=alt;
+                    z->get_node1()->prev=u;
+                    q.decreaseKey(u);
+                }
+            }
+        }
+    }
 }
+ */
 
 
 
