@@ -6,6 +6,13 @@
 #include <string>
 #include <iostream>
 #include <utility>
+
+#include <limits>
+#include <cmath>
+#include "MutablePriorityQueue.h"
+
+
+constexpr auto INF = std::numeric_limits<double>::max();
 using namespace std;
 
 class Node;
@@ -14,14 +21,23 @@ class Graph;
 
 class Node {
 private:
-    vector<Edge*> outgoing_edges;
     int ID;
     string name;
     string importance;
-    int x;
-    int y;
+    double x;
+    double y;
+
+    vector<Edge*> outgoing_edges;
+
+    bool visited;   // for path finding
+    Edge *path;     // for path finding
+    double dist;    // for path finding
+    int queueIndex = 0; // required by MutablePriorityQueue
+
+
 public:
-    Node(int id, string name1, string importance1, int x1,int y1) {
+
+    Node(int id, string name1, string importance1, double x1,double y1) {
         ID = id;
         name = name1;
         importance = importance1;
@@ -36,12 +52,6 @@ public:
         return outgoing_edges[x];
     }
 
-    /*string get_outgoing_edges(){
-        for(int i=0;i<outgoing_edges.size();i++){
-            return outgoing_edges[i]->get_name();
-        }
-    }
-     */
 
     int get_ID(){
         return this->ID;
@@ -55,27 +65,40 @@ public:
         return this->importance;
     }
 
-    int get_x(){
+    double get_x(){
         return this->x;
     }
 
-    int get_y(){
+    double get_y(){
         return this->y;
     }
 
     void add_edge(Edge* objeto){
         outgoing_edges.push_back(objeto);
     }
+    void set_dist(double x){
+        dist=x;
+}
 
+    friend class Graph;
+    friend class MutablePriorityQueue<Node>;
 };
 
 class Edge {
 private:
-    pair< int, int> unify;  //nodes
-    Node *node1;
-    Node *node2;
+    pair< int, int> unify;  //useless
     string name;
     int ID_street;
+
+    Node *node1;
+    Node *node2;
+
+
+    double capacity;
+    double cost;
+    double flow;
+
+    double distance_between_nodes;
 public:
     Edge(int node1, int node2,int ID,string name1) {
         this->unify.first = node1;
@@ -115,6 +138,14 @@ public:
         node2 =  objet;
     }
 
+    double calculate_distance(){
+        double x1=this->node1->get_x();
+        double y1=this->node1->get_y();
+        double x2=this->node2->get_x();
+        double y2=this->node2->get_y();
+        this->distance_between_nodes = sqrt(((x1-x2)*(x1-x2))+((y1-y2)*(y1-y2)))*1000;
+        return distance_between_nodes;
+    }
 };
 
 
@@ -123,6 +154,8 @@ class Graph{
     private:
         vector<Node*> nodes;
     public:
+    void dijkstraShortestPath(Node *s);
+
         int get_size(){
             return nodes.size();
         }
@@ -134,7 +167,41 @@ class Graph{
         Node* get_node(int i){
             return  nodes[i];
         }
-
 };
+
+/*
+void Graph::dijkstraShortestPath(Node *s ) {   // s é o node inicial
+    for(auto v : vertexSet)   // vetor de nodes do grafo
+        v->dist = INF;        // dist do node é a distancia total ate este este node
+    s->dist = 0;              // a distancia do node atual é 0
+    MutablePriorityQueue<Vertex<T>> q;   //nova queue
+    q.insert(s);        //inserir o node inicial na queue
+    while( ! q.empty() ) {    //enquanto a queueu nao estivel vazia
+        auto v = q.extractMin();     //coloca em v um node retirado da queue
+        for (auto e : v->outgoing) {    //coloca em e todas as edges que saiem de v
+            auto oldDist = e->dest->dist;  // coloca em old dist
+            if (relax(v, e->dest, e, e->capacity - e->flow, e->cost)){
+                if (oldDist==INF)
+                    q.insert(e->dest);
+                else
+                    q.decreaseKey(e->dest);
+            }
+        }
+        for (auto e : v->incoming) {
+            auto oldDist = e->orig->dist;
+            if (relax(v, e->orig, e, e->flow, -e->cost)) {
+                if (oldDist == INF)
+                    q.insert(e->orig);
+                else
+                    q.decreaseKey(e->orig);
+            }
+        }
+    }
+}
+ */
+
+
+
+
 
 #endif /* GRAPH_H_ */
