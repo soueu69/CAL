@@ -17,10 +17,13 @@
 class Vehicle{
     private:
          int ID;
-         int max_quantity;
+         int max_quantity=5000;
     public:
          int get_ID(){
              return ID;
+         }
+         void set_id(int y){
+             ID=y;
          }
 
          int get_max_quantity(){
