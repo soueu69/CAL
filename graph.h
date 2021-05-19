@@ -27,12 +27,11 @@ private:
     vector<Edge*> outgoing_edges;
     double double_x;
     double double_y;
+    int menuID;  // menu aux
 
     Vertex *prev;  //auxiliary
     double dist;   //auxiliary
 public:
-    bool visited = false;		// auxiliary field
-
 
     Vertex(string imp,double xx,double yy,string nam){
         importance=imp;
@@ -40,6 +39,18 @@ public:
         double_y=yy;
         name=nam;
     }
+    int set_menuID(int k){
+        menuID=k;
+    }
+
+    int get_menuID(){
+        return  menuID;
+    }
+
+    string get_importance(){
+        return importance;
+    }
+
     void set_prev(Vertex * dis){
         prev=dis;
     }
@@ -83,7 +94,6 @@ public:
     Vertex * get_destiny_vertex(){
         return destination_vertex;
     }
-
 };
 
 class Graph{
