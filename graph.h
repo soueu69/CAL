@@ -103,33 +103,43 @@ public:
 };
 
 void Graph::dijkstraShortestPath(Vertex * source) {
-    vector<Vertex*> lista;
+  void Graph::dijkstraShortestPath(Vertex * source) {
+    int dist[get_vertexes().size()];  // array dist
 
-    for(auto x : get_vertexes()){   // percorre todos os vertices do grafo
-        x->set_dist(INT_MAX);
-        x->set_prev(NULL);
-        lista.push_back(x);         // coloca na auxiliar todos os nodes percorridos
+    //set all distances as infinite instead of source with 0
+    for(int x=0; x != get_vertexes().size(); x++){
+        if(get_vertexes()[x]->get_name() == source->get_name()) dist[x] = 0;
+        else dist[x] = INT_MAX;
     }
 
-    source->set_dist(0);    // dist do node inicial fica 0
-    auto current = lista[0];
-    while(!lista.empty()){
-        int index=0;
-        for(int a=1;a <lista.size();a++){
-            if(lista[a]->get_dist()<current->get_dist()){
-                index = a;
-                current = lista[a];   // o node retirado da lista , o que tinha o dist menor
+    //go through all vertices
+    for(int i=0; i != get_vertexes().size() -1; i++){
+        int min = INT_MAX;
+        int min_index;
+        //pick the vertex with the minimum distance that hasnt been visited
+        for(int j=0; j != get_vertexes().size(); j++){
+            if(!get_vertexes()[j]->visited && dist[j] <= min){
+                min = dist[j];
+                min_index = j;
             }
         }
-        lista.erase(lista.begin() + index);
-    }
-    for(int i =0 ; i<current->get_outgoing_edges().size();i++){
-        double soma = current->get_dist() + current->get_outgoing_edges()[i]->get_lenght();
-        if(soma<current->get_outgoing_edges()[i]->get_destiny_vertex()->get_dist()){
-            current->get_outgoing_edges()[i]->get_destiny_vertex()->set_dist(soma);
-            current->get_outgoing_edges()[i]->get_destiny_vertex()->set_prev(current);
+        //set vertex as visited
+        get_vertexes()[min_index]->visited = true;
+
+        //update the values of the adjacent vertices
+        for(int x=0; x != get_vertexes()[min_index]->get_outgoing_edges().size(); x++){
+            for(int y=0; y != get_vertexes().size(); y++){
+                if(get_vertexes()[y]->get_name()== get_vertexes()[min_index]->get_outgoing_edges()[x]->get_destiny_vertex()->get_name() &&
+                        get_vertexes()[min_index]->get_outgoing_edges()[x]->get_lenght() + dist[min_index] < dist[y])
+                    dist[y] = get_vertexes()[min_index]->get_outgoing_edges()[x]->get_lenght() + dist[min_index];
+            }
         }
     }
+
+    for(int i=0; i != get_vertexes().size(); i++){
+        cout << dist[i] << "      " << get_vertexes()[i]->get_name()<< endl;
+    }
+}
 }
 
 
