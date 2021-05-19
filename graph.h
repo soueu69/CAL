@@ -28,12 +28,11 @@ private:
     double double_x;
     double double_y;
 
-
     Vertex *prev;  //auxiliary
     double dist;   //auxiliary
 public:
     bool visited = false;		// auxiliary field
-    bool processing = false;	// auxiliary field
+
 
     Vertex(string imp,double xx,double yy,string nam){
         importance=imp;
@@ -63,7 +62,6 @@ public:
     vector<Edge*> get_outgoing_edges(){
         return outgoing_edges;
     }
-
     double get_dist(){
         return dist;
     }
@@ -108,42 +106,33 @@ public:
 };
 
 void Graph::dijkstraShortestPath(Vertex * source) {
-    int dist[get_vertexes().size()];  // array dist
-
-    //set all distances as infinite instead of source with 0
-    for(int x=0; x != get_vertexes().size(); x++){
-        if(get_vertexes()[x]->get_name() == source->get_name()) dist[x] = 0;
-        else dist[x] = INT_MAX;
+    vector<Vertex*> lista;            // criar lista com todos os nodes
+    for(auto vertices : vertexes){     // percorrer todos os nodes e atualizar valores
+        vertices->set_dist(INT_MAX);
+        vertices->set_prev(NULL);
+        lista.push_back(vertices);   // colocamos todos os nodes neste vetor
     }
+    source->set_dist(0);
 
-    //go through all vertices
-    for(int i=0; i != get_vertexes().size() -1; i++){
-        int min = INT_MAX;
-        int min_index;
-        //pick the vertex with the minimum distance that hasnt been visited
-        for(int j=0; j != get_vertexes().size(); j++){
-            if(!get_vertexes()[j]->visited && dist[j] <= min){
-                min = dist[j];
-                min_index = j;
+    while(!lista.empty()){                              // enquanto houver nodes na lista
+        auto node = lista[0];                           // node é o node inicial
+        int index=0;
+        for(int i=1; i<lista.size();i++){                // percorrer todos os outros nodes da lista
+            if(node->get_dist()>lista[i]->get_dist()){   // se algum desses nodes tiver uma distancia menor é escolhida
+                node=lista[i];
+                index=i;
             }
         }
-        //set vertex as visited
-        get_vertexes()[min_index]->visited = true;
+        lista.erase(lista.begin()+index);                 // retira da lista o node com menor distancia percorrida e passo a trabalhar com este node
 
-        //update the values of the adjacent vertices
-        for(int x=0; x != get_vertexes()[min_index]->get_outgoing_edges().size(); x++){
-            for(int y=0; y != get_vertexes().size(); y++){
-                if(get_vertexes()[y]->get_name()== get_vertexes()[min_index]->get_outgoing_edges()[x]->get_destiny_vertex()->get_name() &&
-                        get_vertexes()[min_index]->get_outgoing_edges()[x]->get_lenght() + dist[min_index] < dist[y])
-                    dist[y] = get_vertexes()[min_index]->get_outgoing_edges()[x]->get_lenght() + dist[min_index];
+        for(auto outgoing_edges : node->get_outgoing_edges()){                           // todas as edges que saiem do node que escolhemos por ter menor distancia
+            double total_percorrido =  node->get_dist() + outgoing_edges->get_lenght();  // distancia para cada um dos nodes é a distancia do node anterior e somo o amanho da edge
+            if(total_percorrido<outgoing_edges->get_destiny_vertex()->get_dist()){
+                outgoing_edges->get_destiny_vertex()->set_dist(total_percorrido);
+                outgoing_edges->get_destiny_vertex()->set_prev(node);
             }
         }
-    }
-
-    for(int i=0; i != get_vertexes().size(); i++){
-        cout << dist[i] << "      " << get_vertexes()[i]->get_name()<< endl;
     }
 }
-
 
 #endif //PROJETO_CAL_GRAPH_H
