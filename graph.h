@@ -1,231 +1,136 @@
-#ifndef GRAPH_H_
-#define GRAPH_H_
+//
+// Created by diogo on 18/05/2021.
+//
 
-#include <iostream>
+#ifndef PROJETO_CAL_GRAPH_H
+#define PROJETO_CAL_GRAPH_H
+
+
 #include <vector>
-#include <string>
-#include <iostream>
-#include <utility>
-
+#include <queue>
+#include <list>
 #include <limits>
 #include <cmath>
-#include "MutablePriorityQueue.h"
-
-
-constexpr auto INF = std::numeric_limits<double>::max();
+#include <string>
+#include <iterator>
+#include <set>
 using namespace std;
 
-class Node;
-class Edge;
 class Graph;
+class Vertex;
+class Edge;
 
-class Node {
+class Vertex{
 private:
-    int ID;
-    string name;
     string importance;
-    double x;
-    double y;
-    vector<Edge*> outgoing_edges;
-
-    double distance;
-    Node* prev;
-
-
-public:
-
-    Node(int id, string name1, string importance1, double x1,double y1) {
-        ID = id;
-        name = name1;
-        importance = importance1;
-        x = x1;
-        y = y1;
-    }
-
-    int outgoing_edges_size(){
-        return outgoing_edges.size();
-    }
-
-    Edge* get_edge(int x){
-        return outgoing_edges[x];
-    }
-
-
-    int get_ID(){
-        return this->ID;
-    }
-
-    string get_name(){
-        return this->name;
-    }
-
-    string get_importance(){
-        return this->importance;
-    }
-
-    double get_x(){
-        return this->x;
-    }
-
-    double get_y(){
-        return this->y;
-    }
-
-    void add_edge(Edge* objeto){
-        outgoing_edges.push_back(objeto);
-    }
-
-
-
-    friend class Graph;
-    friend class MutablePriorityQueue<Node>;
-
-};
-
-class Edge {
-private:
-    pair< int, int> unify;  //useless
     string name;
-    int ID_street;
+    vector<Edge*> outgoing_edges;
+    double double_x;
+    double double_y;
 
-    Node *node1;
-    Node *node2;
-
-    bool available = true;
-
-    double distance_between_nodes;
+    Vertex *prev;  //auxiliary
+    double dist;   //auxiliary
 public:
-    friend class Graph;
-    friend class Node;
-    double getFlow() const;
-
-    Edge(int node1, int node2,int ID,string name1) {
-        this->unify.first = node1;
-        this->unify.second = node2;
-        this->ID_street = ID;
-        this->name = name1;
+    Vertex(string imp,double xx,double yy,string nam){
+        importance=imp;
+        double_x=xx;
+        double_y=yy;
+        name=nam;
+    }
+    void set_prev(Vertex * dis){
+        prev=dis;
+    }
+    void set_dist(double distance){
+        dist=distance;
     }
 
-
-    void set_bool_false(){
-        available=false;
-    }
-    int get_1ID(){
-        return unify.first;
-    }
-
-    int get_2ID(){
-        return unify.second;
-    }
     string get_name(){
         return name;
     }
-
-    int get_streetID(){
-        return ID_street;
+    double get_x(){
+        return double_x;
+    }
+    double  get_y(){
+        return double_y;
+    }
+    void add_edge(Edge * obj){
+        outgoing_edges.push_back(obj);
+    }
+    vector<Edge*> get_outgoing_edges(){
+        return outgoing_edges;
     }
 
-    Node *get_node1(){
-        return node1;
-    }
-
-    Node *get_node2(){
-        return node2;
-    }
-
-    void set_node1(Node *objet){
-        node1 =  objet;
-    }
-
-    void set_node2(Node *objet){
-        node2 =  objet;
-    }
-
-    double calculate_distance(){
-        double x1=this->node1->get_x();
-        double y1=this->node1->get_y();
-        double x2=this->node2->get_x();
-        double y2=this->node2->get_y();
-        this->distance_between_nodes = sqrt(((x1-x2)*(x1-x2))+((y1-y2)*(y1-y2)))*1000;
-        return distance_between_nodes;
+    double get_dist(){
+        return dist;
     }
 };
+class Edge{
+private:
+    double length;
+    Vertex * destination_vertex;
+public:
+    Edge(Vertex * dest,double len){
+        destination_vertex=dest;
+        length=len;
+    }
+    double get_lenght(){
+        return length;
+    }
 
+    Vertex * get_destiny_vertex(){
+        return destination_vertex;
+    }
 
+};
 
 class Graph{
-    private:
-        vector<Node*> nodes;
-        bool relax(Node *v, Node *w, Edge *e, double residual, double cost);
-    public:
-    void dijkstraShortestPath(Node *s);
+private:
+    vector<Vertex*> vertexes;
+public:
 
-        int get_size(){
-            return nodes.size();
-        }
+    void fill_vector(Vertex * objeto){
+        this->vertexes.push_back(objeto);
+    }
+    vector<Vertex*> get_vertexes(){
+        return vertexes;
+    }
 
-        void add_nodes(Node * obj){
-            nodes.push_back(obj);
-        }
+    Vertex* get_vertex(int i){
+        return vertexes[i];
+    }
 
-        Node* get_node(int i){
-            return  nodes[i];
-        }
+    void dijkstraShortestPath(Vertex * source);
 };
 
+void Graph::dijkstraShortestPath(Vertex * source) {
+    vector<Vertex*> lista;
 
-/*
-function Dijkstra(Graph, source):
-2:	for each vertex v in Graph:	// Initialization
-3:	dist[v] := infinity	// initial distance from source to vertex v is set to infinite
-4:	previous[v] := undefined	// Previous node in optimal path from source
-5:	dist[source] := 0	// Distance from source to source
-6:	Q := the set of all nodes in Graph	// all nodes in the graph are unoptimized - thus are in Q
-7:	while Q is not empty:	// main loop
-8:	u := node in Q with smallest dist[ ]
-9:	remove u from Q
-10:	for each neighbor v of u:	// where v has not yet been removed from Q.
-11:	alt := dist[u] + dist_between(u, v)
-12:	if alt < dist[v]	// Relax (u,v)
-13:	dist[v] := alt
-14:	previous[v] := u
-15:	return previous[ ]
- */
-
-/*
-void Graph::dijkstraShortestPath(Node *origin){
-    origin->distance=0;         //source node distance is 0
-    MutablePriorityQueue<Node> q;
-    for(auto x: nodes ){        // nodes of the graph
-        if(x!=origin){
-            x->distance=INF;      // all other nodes are set to INF;
-            x->prev=NULL;          // node before the current one is NULL
-        }
-        q.insert(x);  // insert all nodes of the graph on the queue
+    for(auto x : get_vertexes()){   // percorre todos os vertices do grafo
+        x->set_dist(INT_MAX);
+        x->set_prev(NULL);
+        lista.push_back(x);         // coloca na auxiliar todos os nodes percorridos
     }
-    while(!q.empty()){      // the main loop
-        auto u = q.extractMin();   // extracts one node from the queue
-        for(auto z : u->outgoing_edges)   { // all edges comming out of the node u
-            double alt = u->distance + z->calculate_distance();  // alt is the some of the nodes current distance plus each edges lenght
-            if(z->get_node1()!=u){
-                if(alt<z->get_node1()->distance){  //starting to get confused
-                    z->get_node1()->distance=alt;
-                    z->get_node1()->prev=u;
-                    q.decreaseKey(u);
-                }
+
+    source->set_dist(0);    // dist do node inicial fica 0
+    auto current = lista[0];
+    while(!lista.empty()){
+        int index=0;
+        for(int a=1;a <lista.size();a++){
+            if(lista[a]->get_dist()<current->get_dist()){
+                index = a;
+                current = lista[a];   // o node retirado da lista , o que tinha o dist menor
             }
+        }
+        lista.erase(lista.begin() + index);
+    }
+    for(int i =0 ; i<current->get_outgoing_edges().size();i++){
+        double soma = current->get_dist() + current->get_outgoing_edges()[i]->get_lenght();
+        if(soma<current->get_outgoing_edges()[i]->get_destiny_vertex()->get_dist()){
+            current->get_outgoing_edges()[i]->get_destiny_vertex()->set_dist(soma);
+            current->get_outgoing_edges()[i]->get_destiny_vertex()->set_prev(current);
         }
     }
 }
- */
 
 
-
-
-
-
-
-
-
-
-#endif /* GRAPH_H_ */
+#endif //PROJETO_CAL_GRAPH_H
