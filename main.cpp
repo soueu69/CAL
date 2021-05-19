@@ -78,16 +78,71 @@ void check_graph_creation(Graph * graph){
     }
 }
 
+Vertex *search_destinations(string dest,Graph * graph){
+    Vertex * objeto=graph->get_vertex(12);
+    for(auto x : graph->get_vertexes()){
+        if(x->get_importance()==dest){
+            cout<<"Name: "<<x->get_name()<<"   Importance: "<<x->get_importance()<<"   DISTANCE:"<<x->get_dist()<<endl;
+            if(objeto->get_dist()>x->get_dist()){
+                objeto=x;
+                continue;
+            }
+        }
+    }
+    return objeto;
+}
+
+void choose_route(Graph *graph){
+    cout<<"Possible destinations :"<<endl;
+    int counter=0;
+    for(auto vertexes : graph->get_vertexes()){
+        if(vertexes->get_importance()=="Application"){  // searches for the application centers (places we need a better route to)
+            vertexes->set_menuID(counter);
+            cout<<"["<<counter<<"]"<<vertexes->get_name()<<endl;
+            counter+=1;
+        }
+    }
+    int number;
+    cout<<endl<<"How many hospital require vaccines:(max 4):";
+    cin>>number;   //number of places that require vacines
+
+    while(true){
+    if(number<0 or number>counter){
+        cout<<"Error, invalid entry.\n";
+        cin.clear();
+        cin.ignore();
+        cout<<"Insert number again:";
+        cin>>number;
+         }
+    if(number>=0 or number<=counter){
+            break;
+        }
+    }
+    int contador_escolhidos=0; // counter of the number of choosen places
+
+    while(contador_escolhidos<number){
+        int choose;  //choose ID
+        cout<<"CHOOSE YOUR DESTINY[ID]:"<<endl;
+        cin>>choose;
+        Vertex *dis;   // the choosen hospital
+        for(auto nodes: graph->get_vertexes()){
+            if(nodes->get_menuID()==choose){
+                dis = nodes;
+            }
+        }
+        // path to hospital
+        ///////////////////
+        graph->dijkstraShortestPath(dis);  // apply dijkstraShortestPath to choosen hospital;
+        auto objeto_final=search_destinations("Storage",graph);
+        cout<<objeto_final->get_name();    // choosen storage center  for dis hospital
+        contador_escolhidos+=1;
+    }
+}
+
 int main() {
     Graph graph;
     read_nodes(&graph);
     read_edges(&graph);
     //check_graph_creation(&graph);
-    auto x = graph.get_vertex(3);  // o source sera o node 4
-    graph.dijkstraShortestPath(x);
-    for(auto ga : graph.get_vertexes()){
-        cout<<ga->get_name()<<"  "<<ga->get_dist()/100000<<endl;
-    }
-
-
+    choose_route(&graph);
 }
