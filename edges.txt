@@ -1,58 +1,29 @@
-1 1 2 Tune_das_antas
-2 2 1 Tune_das_antas
-3 2 3 Avenida_Fernao_Magalhaes_2
-4 3 2 Avenida_Fernao_Magalhaes_2
-5 3 4 Rua_de_Carlos_Magalhaes
-6 4 3 Rua_de_Carlos_Magalhaes
-7 4 5 Rua_da_constituiçao
-8 5 4 Rua_da_constituiçao
-9 5 6 Rua_da_constituiçao_2
-10 6 5 Rua_da_constituiçao_2
-11 3 10 Avenida_Fernao_Magalhaes
-12 10 3 Avenida_Fernao_Magalhaes
-13 11 10 Tunel_goela_de_pau
-14 10 11 Tunel_goela_de_pau
-15 4 9 Rua_da_Alegria
-16 9 4 Rua_da_Alegria
-17 10 9 rua_aires_de_ornelas
-18 9 10 rua_aires_de_ornelas
-19 5 8 rua_sao_joao_bras
-20 8 5 rua_sao_joao_bras
-21 6 7 rua_l
-22 7 6 rua_l
-23 7 8 rua_de_sao_joao_ribeiro
-24 8 7 rua_de_sao_joao_ribeiro
-25 8 9  rua_de_sao_joao_ribeiro_principal
-26 9 8  rua_de_sao_joao_ribeiro_principal
-27 9 18 rua_santa_catarina
-28 18 9 rua_santa_catarina
-29 10 19 Avenida_Fernao_Magalhaes
-30 19 10 Avenida_Fernao_Magalhaes
-31 18 19 rua da firmeza
-32 19 18 rua da firmeza
-33 18 17 rua_fernando_tomáz
-34 17 18 rua_fernando_tomáz
-35 17 16 rua_de_camoes
-36 16 17 rua_de_camoes
-37 16 8 rua_de_camoes
-38 8 16 rua_de_camoes
-39 7 13 rua_de_antero
-40 13 7 rua_de_antero
-41 13 14 rua_de_antero
-42 14 13 rua_de_antero
-43 14 15 rua_da_lapa
-44 15 14 rua_da_lapa
-45 15 16 viaduto_de_gonçalo_cristovao
-46 16 15 viaduto_de_gonçalo_cristovao
-47 13 12 rua_de_borgoes
-48 12 13 rua_de_borgoes
-49 12 20 rua_julio_dinis
-50 20 12 rua_julio_dinis
-51 20 21 rua_filipe_nery
-52 21 20 rua_filipe_nery
-53 17 21 aliados
-54 21 17 aliados
-55 21 22 rua_31_janeiro
-56 22 21 rua_31_janeiro
-57 22 19 rua_santo_idlefonso
-58 19 22 rua_santo_idlefonso
+Estadio_do_dragao Alameda_das_antas
+Alameda_das_antas Antas
+Antas Marques
+Marques Holmes_Place
+Holmes_Place Antero_de_Quintal
+Antas Boralho
+Boralho Hospital_Joaquim_Urbano
+Marques Marques_south
+Marques_south Boralho
+Holmes_Place Banco_Popular
+Antero_de_Quintal ABContact
+ABContact Banco_Popular
+Banco_Popular Marques_south
+Marques_south Urban_Garden_Porto
+Boralho Travessa_Fernao_magalhaes
+Urban_Garden_Porto Travessa_Fernao_magalhaes
+Hospital_da_ordem_da_Trindade  Urban_Garden_Porto
+Viaduto_Gonçalo_Cristovao Hospital_da_ordem_da_Trindade
+Viaduto_Gonçalo_Cristovao Marques_south
+ABContact Lapa
+Lapa Hospital_Ordem_da_Lapa
+Hospital_Ordem_da_Lapa Praça_da_Republica
+Praça_da_Republica Viaduto_Gonçalo_Cristovao
+Lapa Ramada_alta
+Ramada_alta Hospital_CICA
+Hospital_CICA Travessa_flores
+Hospital_da_ordem_da_Trindade Travessa_flores
+Travessa_flores Sao_bento
+Sao_bento Travessa_Fernao_magalhaes
