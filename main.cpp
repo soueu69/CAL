@@ -79,13 +79,16 @@ void check_graph_creation(Graph * graph){
 }
 
 Vertex *search_destinations(string dest,Graph * graph){
-    Vertex * objeto=graph->get_vertex(12);
+    Vertex * objeto= new Vertex("nada",1,1,"Teste");
+    objeto->set_dist(INT_MAX);
     for(auto x : graph->get_vertexes()){
         if(x->get_importance()==dest){
-            cout<<"Name: "<<x->get_name()<<"   Importance: "<<x->get_importance()<<"   DISTANCE:"<<x->get_dist()<<endl;
-            if(objeto->get_dist()>x->get_dist()){
+            cout<<"Name: "<<x->get_name()<<"   DISTANCE:"<<x->get_dist()<<endl;
+            if(x->get_dist()==objeto->get_dist()){
                 objeto=x;
-                continue;
+            }
+            if(x->get_dist()<objeto->get_dist()){
+                objeto=x;
             }
         }
     }
@@ -119,7 +122,7 @@ void choose_route(Graph *graph){
         }
     }
     int contador_escolhidos=0; // counter of the number of choosen places
-
+    vector<Vertex *> choosen_places;
     while(contador_escolhidos<number){
         int choose;  //choose ID
         cout<<"CHOOSE YOUR DESTINY[ID]:"<<endl;
@@ -128,14 +131,19 @@ void choose_route(Graph *graph){
         for(auto nodes: graph->get_vertexes()){
             if(nodes->get_menuID()==choose){
                 dis = nodes;
+                choosen_places.push_back(dis);
             }
         }
-        // path to hospital
-        ///////////////////
-        graph->dijkstraShortestPath(dis);  // apply dijkstraShortestPath to choosen hospital;
-        auto objeto_final=search_destinations("Storage",graph);
-        cout<<objeto_final->get_name();    // choosen storage center  for dis hospital
         contador_escolhidos+=1;
+    }
+
+    for(auto pick : choosen_places){
+        cout<<pick->get_name()<<endl;
+        graph->dijkstraShortestPath(pick);
+        auto objeto_final=search_destinations("Storage",graph);
+        cout<<objeto_final->get_name()<<endl;    // choosen storage center  for dis hospital
+        cout<<".............................."<<endl;
+
     }
 }
 
