@@ -28,9 +28,13 @@ private:
     double double_x;
     double double_y;
 
+
     Vertex *prev;  //auxiliary
     double dist;   //auxiliary
 public:
+    bool visited = false;		// auxiliary field
+    bool processing = false;	// auxiliary field
+
     Vertex(string imp,double xx,double yy,string nam){
         importance=imp;
         double_x=xx;
@@ -63,6 +67,7 @@ public:
     double get_dist(){
         return dist;
     }
+
 };
 class Edge{
 private:
@@ -103,7 +108,6 @@ public:
 };
 
 void Graph::dijkstraShortestPath(Vertex * source) {
-  void Graph::dijkstraShortestPath(Vertex * source) {
     int dist[get_vertexes().size()];  // array dist
 
     //set all distances as infinite instead of source with 0
@@ -139,7 +143,6 @@ void Graph::dijkstraShortestPath(Vertex * source) {
     for(int i=0; i != get_vertexes().size(); i++){
         cout << dist[i] << "      " << get_vertexes()[i]->get_name()<< endl;
     }
-}
 }
 
 
