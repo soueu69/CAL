@@ -1,0 +1,40 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+C:/Users/diogo/Desktop/PROJETO CAL/graph.h
+vector
+-
+queue
+-
+list
+-
+limits
+-
+cmath
+-
+string
+-
+iterator
+-
+set
+-
+
+C:/Users/diogo/Desktop/PROJETO CAL/main.cpp
+iostream
+-
+fstream
+-
+string
+-
+vector
+-
+graph.h
+C:/Users/diogo/Desktop/PROJETO CAL/graph.h
+cmath
+-
+

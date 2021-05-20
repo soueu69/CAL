@@ -1,3 +1,3 @@
-C:/Users/diogo/OneDrive/Documentos/calProj/CAL/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-C:/Users/diogo/OneDrive/Documentos/calProj/CAL/cmake-build-debug/CMakeFiles/untitled21.dir
-C:/Users/diogo/OneDrive/Documentos/calProj/CAL/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/diogo/Desktop/PROJETO CAL/cmake-build-debug/CMakeFiles/PROJETO_CAL.dir
+C:/Users/diogo/Desktop/PROJETO CAL/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/diogo/Desktop/PROJETO CAL/cmake-build-debug/CMakeFiles/rebuild_cache.dir

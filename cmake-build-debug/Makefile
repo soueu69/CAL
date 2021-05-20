@@ -67,24 +67,13 @@ RM = "C:\Program Files\JetBrains\CLion 2020.3.2\bin\cmake\win\bin\cmake.exe" -E 
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = C:\Users\diogo\OneDrive\Documentos\calProj\CAL
+CMAKE_SOURCE_DIR = "C:\Users\diogo\Desktop\PROJETO CAL"
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = C:\Users\diogo\OneDrive\Documentos\calProj\CAL\cmake-build-debug
+CMAKE_BINARY_DIR = "C:\Users\diogo\Desktop\PROJETO CAL\cmake-build-debug"
 
 #=============================================================================
 # Targets provided globally by CMake.
-
-# Special rule for the target rebuild_cache
-rebuild_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
-	"C:\Program Files\JetBrains\CLion 2020.3.2\bin\cmake\win\bin\cmake.exe" --regenerate-during-build -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
-.PHONY : rebuild_cache
-
-# Special rule for the target rebuild_cache
-rebuild_cache/fast: rebuild_cache
-
-.PHONY : rebuild_cache/fast
 
 # Special rule for the target edit_cache
 edit_cache:
@@ -97,11 +86,22 @@ edit_cache/fast: edit_cache
 
 .PHONY : edit_cache/fast
 
+# Special rule for the target rebuild_cache
+rebuild_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
+	"C:\Program Files\JetBrains\CLion 2020.3.2\bin\cmake\win\bin\cmake.exe" --regenerate-during-build -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+.PHONY : rebuild_cache
+
+# Special rule for the target rebuild_cache
+rebuild_cache/fast: rebuild_cache
+
+.PHONY : rebuild_cache/fast
+
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\diogo\OneDrive\Documentos\calProj\CAL\cmake-build-debug\CMakeFiles C:\Users\diogo\OneDrive\Documentos\calProj\CAL\cmake-build-debug\CMakeFiles\progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start "C:\Users\diogo\Desktop\PROJETO CAL\cmake-build-debug\CMakeFiles" "C:\Users\diogo\Desktop\PROJETO CAL\cmake-build-debug\CMakeFiles\progress.marks"
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start C:\Users\diogo\OneDrive\Documentos\calProj\CAL\cmake-build-debug\CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start "C:\Users\diogo\Desktop\PROJETO CAL\cmake-build-debug\CMakeFiles" 0
 .PHONY : all
 
 # The main clean target
@@ -130,17 +130,17 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named untitled21
+# Target rules for targets named PROJETO_CAL
 
 # Build rule for target.
-untitled21: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 untitled21
-.PHONY : untitled21
+PROJETO_CAL: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 PROJETO_CAL
+.PHONY : PROJETO_CAL
 
 # fast build rule for target.
-untitled21/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\untitled21.dir\build.make CMakeFiles/untitled21.dir/build
-.PHONY : untitled21/fast
+PROJETO_CAL/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\PROJETO_CAL.dir\build.make CMakeFiles/PROJETO_CAL.dir/build
+.PHONY : PROJETO_CAL/fast
 
 main.obj: main.cpp.obj
 
@@ -148,7 +148,7 @@ main.obj: main.cpp.obj
 
 # target to build an object file
 main.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\untitled21.dir\build.make CMakeFiles/untitled21.dir/main.cpp.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\PROJETO_CAL.dir\build.make CMakeFiles/PROJETO_CAL.dir/main.cpp.obj
 .PHONY : main.cpp.obj
 
 main.i: main.cpp.i
@@ -157,7 +157,7 @@ main.i: main.cpp.i
 
 # target to preprocess a source file
 main.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\untitled21.dir\build.make CMakeFiles/untitled21.dir/main.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\PROJETO_CAL.dir\build.make CMakeFiles/PROJETO_CAL.dir/main.cpp.i
 .PHONY : main.cpp.i
 
 main.s: main.cpp.s
@@ -166,7 +166,7 @@ main.s: main.cpp.s
 
 # target to generate assembly for a file
 main.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\untitled21.dir\build.make CMakeFiles/untitled21.dir/main.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\PROJETO_CAL.dir\build.make CMakeFiles/PROJETO_CAL.dir/main.cpp.s
 .PHONY : main.cpp.s
 
 # Help Target
@@ -177,7 +177,7 @@ help:
 	@echo ... depend
 	@echo ... edit_cache
 	@echo ... rebuild_cache
-	@echo ... untitled21
+	@echo ... PROJETO_CAL
 	@echo ... main.obj
 	@echo ... main.i
 	@echo ... main.s
