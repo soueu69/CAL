@@ -14,6 +14,7 @@
 #include <string>
 #include <iterator>
 #include <set>
+#include <algorithm>
 using namespace std;
 
 class Graph;
@@ -25,7 +26,6 @@ private:
     int IDaux;   //auxiliary for updating graph
     int menuID=599;  // menu aux
 
-
     bool available =true;  //for checking if it can be used
     string importance;
     string name;
@@ -36,13 +36,28 @@ private:
 
     double dist;   //auxiliary
     Vertex * previous; //auxiliary
+
+    double dist_Floyd;  //distance used in FLOYD
+    int ID; //used for Floyd Marshall
 public:
 
-    Vertex(string imp,double xx,double yy,string nam){
+    Vertex(string imp,double xx,double yy,string nam,int c){
         importance=imp;
         double_x=xx;
         double_y=yy;
         name=nam;
+        ID=c;
+    }
+    int get_dist_Floyd(){
+        return dist_Floyd;
+    }
+
+    void set_dist_Floyd(double floy){
+        dist_Floyd=floy;
+    }
+
+    int get_ID(){
+        return ID;
     }
     void set_IDaux(int x){
         IDaux=x;
@@ -70,16 +85,7 @@ public:
     string get_importance(){
         return importance;
     }
-    /*
-    void set_visited(bool dis){
-        visited=dis;
-    }
 
-
-    bool get_visited(){
-            return visited;
-    };
-     */
     Vertex * get_previous(){
         return previous;
     }
@@ -157,14 +163,12 @@ public:
 
 class Graph{
 private:
-    vector<Vertex*> vertexes;
-
-    vector<Edge*> aux_edges;
+    vector<Vertex*> vertexes; //main vertex set
+    vector<Edge*> aux_edges;  //auxiliary
 public:
     Edge* get_edge(int x){
         return aux_edges[x];
     }
-
 
     vector<Edge*> get_edges(){
         return aux_edges;
@@ -186,6 +190,8 @@ public:
     }
 
     vector<Vertex*> dijkstraShortestPath(Vertex * source,Vertex * destiny);
+    vector<Vertex*>  floydWarshall(int id_inicial, int id_final);
+
 };
 
 vector<Vertex*> Graph::dijkstraShortestPath(Vertex * source,Vertex * destiny) {
@@ -234,6 +240,75 @@ vector<Vertex*> Graph::dijkstraShortestPath(Vertex * source,Vertex * destiny) {
     }
     path.push_back(source);
     return path;
+}
+
+vector<Vertex*>  Graph::floydWarshall(int id_inicial, int id_final) {
+    int array[23][23];
+    int path[23][23];
+    for(int i=0;i<23;i++){
+        for(int i2=0;i2<23;i2++){
+            array[i][i2]=999;
+            if(i==i2){
+                array[i][i2]=0;
+                path[i][i2]=i;
+            }
+        }
+    }
+    for(int i2=0; i2< vertexes.size();i2++){  //percorremos todos os nodes
+        auto first_node=vertexes[i2]->get_ID();   // ID do primeiro node
+        for(auto x : vertexes[i2]->get_outgoing_edges()){
+            auto distancia = x->get_lenght();   // distania entre estes dois nodes
+            auto second_node = x->get_destiny_vertex()->get_ID();  //ID do segundo node
+            array[first_node][second_node]=distancia;
+            path[first_node][second_node]=x->get_destiny_vertex()->get_ID();
+
+        }
+    }
+    for(int k =0;k<23;k++){
+        for(int i =0;i<23;i++){
+            for(int j =0;j<23;j++){
+                if(array[i][j]>array[i][k]+array[k][j]){
+                    array[i][j]=array[i][k]+array[k][j];
+                    path[i][j]=path[i][k];
+                }
+            }
+        }
+    }
+    /*
+    for(int i=0;i<23;i++){
+        for(int i2=0;i2<23;i2++){
+            cout<<" "<<array[i][i2]<<" ";
+        }
+        cout<<"!"<<endl;
+    }
+     */
+    ///GET PATH
+
+    vector<int> caminho;   //guarda caminho percorrido
+    caminho.push_back(id_final);  //coloca a ultima
+    while(true){
+        int tamanho = caminho.size();
+        if(caminho[tamanho-2]==caminho[tamanho-1]){
+            break;
+        }
+        auto anterior = path[id_inicial][id_final];  //calcula o anterior ao final
+        caminho.push_back(anterior);        // coloca no vetor o anterior
+        id_final=anterior;                     //final passa a ser o anterior
+    }
+    caminho.pop_back();
+    caminho.push_back(id_inicial);
+    reverse(caminho.begin(),caminho.end());
+
+    vector<Vertex*> sequencia;
+    for(int i =0 ;i<caminho.size();i++){
+        auto id = caminho[i];
+        for(auto x :vertexes){
+            if(x->get_ID()==id){
+                sequencia.push_back(x);
+            }
+        }
+    }
+    return sequencia;
 }
 
 #endif //PROJETO_CAL_GRAPH_H
