@@ -78,25 +78,62 @@ void check_graph_creation(Graph * graph){
     }
 }
 
-Vertex *search_destinations(string dest,Graph * graph){
-    Vertex * objeto= new Vertex("nada",1,1,"Teste");
-    objeto->set_dist(INT_MAX);
+void get_path(Graph *graph, vector<Vertex*> hospitals){
+    //When function is called put all the possible storage centers in tis vector
+    vector<Vertex*> storage;
     for(auto x : graph->get_vertexes()){
-        if(x->get_importance()==dest){
-            cout<<"Name: "<<x->get_name()<<"   DISTANCE:"<<x->get_dist()<<endl;
-            if(x->get_dist()==objeto->get_dist()){
-                objeto=x;
-            }
-            if(x->get_dist()<objeto->get_dist()){
-                objeto=x;
-            }
+        if(x->get_importance()=="Storage"){
+            storage.push_back(x);
         }
     }
-    return objeto;
+        if(hospitals.size()==1){
+
+        auto armazem = storage[0];  //colocamos o primeiro armazem nesta variavel
+        auto vetor=graph->dijkstraShortestPath(hospitals[0],storage[0]);
+
+        for(int i =0 ;i<storage.size();i++){
+            graph->dijkstraShortestPath(hospitals[0],storage[i]);
+            if(storage[i]->get_dist()<armazem->get_dist()){
+                armazem=storage[i];
+                vetor=graph->dijkstraShortestPath(hospitals[0],storage[i]);
+            }
+        }
+            cout<<"------------------------------------------------------------------------------------------------------------------------";
+            cout<<"Closest storage to current hospital:  "<<armazem->get_dist()<<" "<<armazem->get_name()<<" to " <<hospitals[0]->get_name()<<endl;
+            cout<<endl<<"Ideal Path: ";
+            for(auto each : vetor){
+                if(each==armazem){
+                    cout<<each->get_name();
+                    continue;
+                }
+                cout<<" -> "<<each->get_name();
+            }
+            cout<<endl<<"------------------------------------------------------------------------------------------------------------------------"<<endl;
+
+
+
+    }
+        if(hospitals.size()>1){
+            cout<<"calculate ideal_path";
+        }
+        
+        
+        
+
+
+
+
+
+
+
 }
 
-void choose_route(Graph *graph){
-    cout<<"Possible destinations :"<<endl;
+
+
+
+void choose_destinations(Graph *graph){
+    vector<Vertex*> required_hospitals;                 // all the chosen destination places by the user
+    cout<<endl<<"Possible destinations :"<<endl;
     int counter=0;
     for(auto vertexes : graph->get_vertexes()){
         if(vertexes->get_importance()=="Application"){  // searches for the application centers (places we need a better route to)
@@ -115,35 +152,94 @@ void choose_route(Graph *graph){
         cin.clear();
         cin.ignore();
         cout<<"Insert number again:";
-        cin>>number;
+        cin>>number;                     // number is the number os hospital that need vacines
          }
     if(number>=0 or number<=counter){
             break;
         }
     }
-    int contador_escolhidos=0; // counter of the number of choosen places
-    vector<Vertex *> choosen_places;
-    while(contador_escolhidos<number){
-        int choose;  //choose ID
-        cout<<"CHOOSE YOUR DESTINY[ID]:"<<endl;
-        cin>>choose;
-        Vertex *dis;   // the choosen hospital
-        for(auto nodes: graph->get_vertexes()){
-            if(nodes->get_menuID()==choose){
-                dis = nodes;
-                choosen_places.push_back(dis);
+    int counter2=0;
+    while(counter2<number) {        // asks for hospital destination counter number of times
+        int choose;                 //choose ID
+        cout << "CHOOSE YOUR DESTINATION[ID]:" << endl;
+        cin >> choose;
+        for (auto nodes: graph->get_vertexes()) {
+            if (nodes->get_menuID() == choose) {
+                required_hospitals.push_back(nodes);
             }
         }
-        contador_escolhidos+=1;
+        counter2+=1;
     }
 
-    for(auto pick : choosen_places){
-        cout<<pick->get_name()<<endl;
-        graph->dijkstraShortestPath(pick);
-        auto objeto_final=search_destinations("Storage",graph);
-        cout<<objeto_final->get_name()<<endl;    // choosen storage center  for dis hospital
-        cout<<".............................."<<endl;
+    get_path(graph,required_hospitals);
 
+}
+
+void update_graph(Graph *graph){
+    cout<<"[0]Set road as unavailable"<<endl;
+    cout<<"[1]Set road as available"<<endl;
+    int choice;
+    cout<<"Choose ID:";
+    cin>>choice;
+    if(choice==0){
+        Vertex *node;
+        for(int i=0;i<graph->get_vertexes().size();i++){
+            node=graph->get_vertex(i);
+            node->set_IDaux(i);
+            if(node->get_availablility()==true){
+                cout<<"["<<i<<"]"<<node->get_name()<<endl;
+            }
+        }
+        cout<<"Choose ID: ";
+        int x;
+        cin>>x;
+        for(auto vert : graph->get_vertexes()){
+            if(vert->get_IDaux()==x){
+                vert->set_availablility(false);
+            }
+        }
+    }
+    if(choice==1){
+        Vertex *node;
+        for(int i=0;i<graph->get_vertexes().size();i++){
+            node=graph->get_vertex(i);
+            node->set_IDaux(i);
+            if(node->get_availablility()==false){
+                cout<<"["<<i<<"]"<<node->get_name()<<endl;
+            }
+        }
+        cout<<"Choose ID: ";
+        int x;
+        cin>>x;
+        for(auto vert : graph->get_vertexes()){
+            if(vert->get_IDaux()==x){
+                vert->set_availablility(true);
+            }
+        }
+    }
+}
+
+void menu(Graph *graph){
+    cout<<"........MENU........"<<endl;
+    cout<<"[0]SET PATH"<<endl;
+    cout<<"[1]UPDATE GRAPH"<<endl;
+    cout<<"[2]DISPLAY GRAPH "<<endl;
+    int choice;
+    cout<<"Choose ID: ";
+    cin>>choice;
+    switch(choice){
+        case 0:{
+            choose_destinations(graph);
+            break;
+        }
+        case 1:{
+            update_graph(graph);
+            break;
+        }
+        case 2:{
+            cout<<"CHECK GRAPH";
+            break;
+        }
     }
 }
 
@@ -151,6 +247,5 @@ int main() {
     Graph graph;
     read_nodes(&graph);
     read_edges(&graph);
-    //check_graph_creation(&graph);
-    choose_route(&graph);
+    menu(&graph);
 }
