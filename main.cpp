@@ -83,6 +83,7 @@ void check_graph_creation(Graph * graph){
 void get_path(Graph *graph, vector<Vertex*> hospitals){
     //When function is called put all the possible storage centers in tis vector
     vector<Vertex*> storage;
+
     for(auto x : graph->get_vertexes()){
         if(x->get_importance()=="Storage"){
             storage.push_back(x);
@@ -100,6 +101,7 @@ void get_path(Graph *graph, vector<Vertex*> hospitals){
                 vetor=graph->dijkstraShortestPath(hospitals[0],storage[i]);
             }
         }
+            cout<<".................................................DISPLAYING FULL ROUTE................................................."<<endl;
             cout<<"------------------------------------------------------------------------------------------------------------------------";
             cout<<"Closest storage to current hospital:  "<<armazem->get_dist()<<" "<<armazem->get_name()<<" to " <<hospitals[0]->get_name()<<endl;
             cout<<endl<<"Ideal Path: ";
@@ -110,28 +112,100 @@ void get_path(Graph *graph, vector<Vertex*> hospitals){
                 }
                 cout<<" -> "<<each->get_name();
             }
+            cout<<endl<<endl<<"ARRIVED AT YOUR DESTINATION!";
             cout<<endl<<"------------------------------------------------------------------------------------------------------------------------"<<endl;
 
 
 
     }
         if(hospitals.size()>1){
-            cout<<"calculate ideal_path";
+            cout<<"CALCULATE IDEAL PATH FOR MORE THAN 2 HOSPITALS USING JUST 1 STORAGE CENTER IN ONE RIDE"<<endl;
+            cout<<endl;
+
+            //cout<<hospitals.size()<<endl;
+            vector<string>nomes_hospitais;
+            vector<string>nomes_armazens;
+            vector<double>distancias;
+
+            for(auto h : hospitals){
+                for(int i =0 ; i<storage.size();i++){
+                    graph->dijkstraShortestPath(h,storage[i]);
+                    //cout<<"A DISTANCIA DO HOSPITAL "<< h->get_name()<< " ate o armazem "<<storage[i]->get_name() <<" e "<< storage[i]->get_dist()<<endl;
+                        nomes_hospitais.push_back(h->get_name());
+                        nomes_armazens.push_back(storage[i]->get_name());
+                        distancias.push_back(storage[i]->get_dist());
+                }
+            }
+            double min_dist=100000000000000;
+            int index;
+            for(int i=0;i<distancias.size(); i++){
+                double x=distancias[i];
+                if(x<min_dist){
+                    min_dist=x;
+                    index=i;
+                }
+            }
+            Vertex * source1;
+            Vertex * dest;
+            for(auto x: graph->get_vertexes()){
+                if(x->get_name()==nomes_hospitais[index]){
+                    source1 =x;    // primeiro hospital do percurso
+                }
+                if(x->get_name()==nomes_armazens[index]){
+                    dest=x;        // armazem a usar
+                }
+            }
+
+            cout<<".................................................DISPLAYING FULL ROUTE.................................................";
+            cout<<endl<<"------------------------------------------------------------------------------------------------------------------------";
+           auto vetor1= graph->dijkstraShortestPath(source1,dest);
+            for(auto each : vetor1){
+                if(each->get_importance()=="Storage"){
+                    cout<<each->get_name();
+                    continue;
+                }
+                cout<<" -> "<<each->get_name();
+            }
+            cout<<endl<<endl<<"ARRIVED AT FIRST DESTINATION!"<<endl<<"CALCULATING NEW PATH...";
+            cout<<endl<<"------------------------------------------------------------------------------------------------------------------------";
+            auto last_visited=vetor1[vetor1.size()-1]; // qual o primeiro hospital que me desloco
+            for(int i=0;i<hospitals.size();i++){
+                if(hospitals[i]==last_visited){
+                    hospitals.erase(hospitals.begin()+i);  // retira do vetor hospitais o hospital visitado
+                }
+            }
+            while(true){
+                int distancia=1000000000;
+                int index;
+                for(int i=0;i<hospitals.size();i++){  // percorre todos os hospitais que faltam ir
+                    auto vetor1= graph->dijkstraShortestPath(last_visited,hospitals[i]);
+                    if(hospitals[i]->get_dist()<distancia){
+                        index=i;
+                    }
+                }
+                auto show_user= graph->dijkstraShortestPath(hospitals[index] ,last_visited);
+                for(auto each : show_user){
+                    if(each->get_importance()=="Storage"){
+                        cout<<each->get_name();
+                        continue;
+                    }
+                    cout<<" -> "<<each->get_name();
+                }
+                last_visited=show_user[show_user.size()-1];
+                if(hospitals.size()>1){
+                    cout<<endl<<endl<<"ARRIVED AT NEW DESTINATION!"<<endl<<"CALCULATING NEW PATH...";
+                }
+                if(hospitals.size()==1){
+                    cout<<endl<<endl<<"ARRIVED AT LAST DESTINATION!";
+                }
+                cout<<endl<<"------------------------------------------------------------------------------------------------------------------------";
+                hospitals.erase(hospitals.begin()+index);
+                if(hospitals.empty()){
+                    break;
+                }
+            }
         }
-
-
-
-
-
-
-
-
-
-
 }
-
-
-
 
 void choose_destinations(Graph *graph){
     vector<Vertex*> required_hospitals;                 // all the chosen destination places by the user
@@ -172,9 +246,7 @@ void choose_destinations(Graph *graph){
         }
         counter2+=1;
     }
-
     get_path(graph,required_hospitals);
-
 }
 
 void update_graph(Graph *graph){
@@ -212,7 +284,6 @@ void update_graph(Graph *graph){
             }
         }
     }
-    
     if(choice==1){
         for(int i=0;i<graph->get_edges().size();i++){
             graph->get_edge(i)->set_aux_id(i);
