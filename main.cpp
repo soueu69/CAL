@@ -48,6 +48,7 @@ void read_edges(Graph * graph){
             }
         }
         linha.push_back(word);
+
         for(int i=0; i<graph->get_vertexes().size();i++){
             if(graph->get_vertex(i)->get_name()==linha[0]){
                 for(int i2=0; i2<graph->get_vertexes().size();i2++){
@@ -57,6 +58,7 @@ void read_edges(Graph * graph){
                         double second = (graph->get_vertex(i)->get_y()-graph->get_vertex(i2)->get_y())*(graph->get_vertex(i)->get_y()-graph->get_vertex(i2)->get_y());
                         le=sqrt(first+second)*10000;
                         Edge *objeto= new Edge(graph->get_vertex(i2),le);
+                        graph->fill_edges(objeto);
                         graph->get_vertex(i)->add_edge(objeto);
                     }
                 }
@@ -116,9 +118,9 @@ void get_path(Graph *graph, vector<Vertex*> hospitals){
         if(hospitals.size()>1){
             cout<<"calculate ideal_path";
         }
-        
-        
-        
+
+
+
 
 
 
@@ -181,39 +183,61 @@ void update_graph(Graph *graph){
     int choice;
     cout<<"Choose ID:";
     cin>>choice;
+
     if(choice==0){
-        Vertex *node;
-        for(int i=0;i<graph->get_vertexes().size();i++){
-            node=graph->get_vertex(i);
-            node->set_IDaux(i);
-            if(node->get_availablility()==true){
-                cout<<"["<<i<<"]"<<node->get_name()<<endl;
+        for(int i=0;i<graph->get_edges().size();i++){
+            graph->get_edge(i)->set_aux_id(i);
+            cout<<"["<<i<<"]"<<graph->get_edge(i)->get_name()<<"Availability: "<<graph->get_edge(i)->get_available()<<endl;
+        }
+
+        int chosing;
+        cout<<"Choose ID: ";
+        cin>>chosing;
+        while(true){
+            if(chosing<0 or chosing>graph->get_edges().size()){
+                cout<<"Error, invalid entry.\n";
+                cin.clear();
+                cin.ignore();
+                cout<<"Insert number again:";
+                cin>>chosing;
+            }
+            if(chosing>=0 or chosing<=graph->get_edges().size()){
+                break;
             }
         }
-        cout<<"Choose ID: ";
-        int x;
-        cin>>x;
-        for(auto vert : graph->get_vertexes()){
-            if(vert->get_IDaux()==x){
-                vert->set_availablility(false);
+
+        for(auto edge : graph->get_edges()){
+            if(edge->get_aux_id()==chosing and edge->get_available()){
+                edge->set_available(false);
             }
         }
     }
+    
     if(choice==1){
-        Vertex *node;
-        for(int i=0;i<graph->get_vertexes().size();i++){
-            node=graph->get_vertex(i);
-            node->set_IDaux(i);
-            if(node->get_availablility()==false){
-                cout<<"["<<i<<"]"<<node->get_name()<<endl;
+        for(int i=0;i<graph->get_edges().size();i++){
+            graph->get_edge(i)->set_aux_id(i);
+            cout<<"["<<i<<"]"<<graph->get_edge(i)->get_name()<<"Availability: "<<graph->get_edge(i)->get_available()<<endl;
+        }
+
+        int chosing;
+        cout<<"Choose ID: ";
+        cin>>chosing;
+        while(true){
+            if(chosing<0 or chosing>graph->get_edges().size()){
+                cout<<"Error, invalid entry.\n";
+                cin.clear();
+                cin.ignore();
+                cout<<"Insert number again:";
+                cin>>chosing;
+            }
+            if(chosing>=0 or chosing<=graph->get_edges().size()){
+                break;
             }
         }
-        cout<<"Choose ID: ";
-        int x;
-        cin>>x;
-        for(auto vert : graph->get_vertexes()){
-            if(vert->get_IDaux()==x){
-                vert->set_availablility(true);
+
+        for(auto edge : graph->get_edges()){
+            if(edge->get_aux_id()==chosing and !edge->get_available()){
+                edge->set_available(true);
             }
         }
     }
@@ -242,6 +266,7 @@ void menu(Graph *graph){
         }
     }
 }
+
 
 int main() {
     Graph graph;
