@@ -6,6 +6,7 @@
 #include <cmath>
 
 void read_nodes(Graph * graph){
+    int counter=0;
     string textline;
     ifstream infile;
     infile.open("../nodes.txt");
@@ -26,8 +27,9 @@ void read_nodes(Graph * graph){
         }
         double doublex = stod(info[1]);   // coordanate x
         double doubley = stod(info[2]);   //coordenate y
-        Vertex *objeto= new Vertex(info[0],doublex,doubley,info[3]);
+        Vertex *objeto= new Vertex(info[0],doublex,doubley,info[3],counter);
         graph->fill_vector(objeto);
+        counter+=1;
     }
     infile.close();
 }
@@ -103,7 +105,7 @@ void get_path(Graph *graph, vector<Vertex*> hospitals){
         }
             cout<<".................................................DISPLAYING FULL ROUTE................................................."<<endl;
             cout<<"------------------------------------------------------------------------------------------------------------------------";
-            cout<<"Closest storage to current hospital:  "<<armazem->get_dist()<<" "<<armazem->get_name()<<" to " <<hospitals[0]->get_name()<<endl;
+            //cout<<"Closest storage to current hospital:  "<<armazem->get_dist()<<" "<<armazem->get_name()<<" to " <<hospitals[0]->get_name()<<endl;
             cout<<endl<<"Ideal Path: ";
             for(auto each : vetor){
                 if(each==armazem){
@@ -337,7 +339,6 @@ void menu(Graph *graph){
         }
     }
 }
-
 
 int main() {
     Graph graph;
