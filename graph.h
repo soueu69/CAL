@@ -24,7 +24,7 @@ class Vertex{
 private:
     int IDaux;   //auxiliary for updating graph
     int menuID=599;  // menu aux
-  
+
 
     bool available =true;  //for checking if it can be used
     string importance;
@@ -114,13 +114,38 @@ public:
 };
 class Edge{
 private:
+    int aux_id;
+    string name;
+
     double length;
     Vertex * destination_vertex;
+    bool available = true;
 public:
     Edge(Vertex * dest,double len){
         destination_vertex=dest;
         length=len;
+        name = " Estrada da "+dest->get_name();
     }
+    void set_aux_id(int y){
+        aux_id=y;
+    }
+
+    int get_aux_id(){
+        return  aux_id;
+    }
+
+    bool get_available(){
+        return available;
+    }
+
+    string get_name(){
+        return name;
+    }
+
+    void set_available(bool x){
+        available=x;
+    }
+
     double get_lenght(){
         return length;
     }
@@ -133,7 +158,21 @@ public:
 class Graph{
 private:
     vector<Vertex*> vertexes;
+
+    vector<Edge*> aux_edges;
 public:
+    Edge* get_edge(int x){
+        return aux_edges[x];
+    }
+
+
+    vector<Edge*> get_edges(){
+        return aux_edges;
+    }
+
+    void fill_edges(Edge* objeto){
+        aux_edges.push_back(objeto);
+    }
 
     void fill_vector(Vertex * objeto){
         this->vertexes.push_back(objeto);
@@ -158,7 +197,6 @@ vector<Vertex*> Graph::dijkstraShortestPath(Vertex * source,Vertex * destiny) {
     }
     source->set_dist(0);
 
-
     while(!lista.empty()){
         auto node = lista[0];
         int index=0;
@@ -173,11 +211,12 @@ vector<Vertex*> Graph::dijkstraShortestPath(Vertex * source,Vertex * destiny) {
         lista.erase(lista.begin()+index);                 // retira da lista o node com menor distancia percorrida e passo a trabalhar com este node
 
         for(auto outgoing_edges : node->get_outgoing_edges()){            // todas as edges que saiem do node que escolhemos por ter menor distancia
-            double total_percorrido =  node->get_dist() + outgoing_edges->get_lenght();  // distancia para cada um dos nodes é a distancia do node anterior e somo o amanho da edge
-            if(total_percorrido<outgoing_edges->get_destiny_vertex()->get_dist()){
-                outgoing_edges->get_destiny_vertex()->set_dist(total_percorrido);
-                outgoing_edges->get_destiny_vertex()->set_previous(node);
-
+            if(outgoing_edges->get_available()){                           // condicao que proibe edge indisponivel de ser usada para determinar um caminho
+                double total_percorrido =  node->get_dist() + outgoing_edges->get_lenght();  // distancia para cada um dos nodes é a distancia do node anterior e somo o amanho da edge
+                if(total_percorrido<outgoing_edges->get_destiny_vertex()->get_dist()){
+                    outgoing_edges->get_destiny_vertex()->set_dist(total_percorrido);
+                    outgoing_edges->get_destiny_vertex()->set_previous(node);
+                }
             }
         }
     }
