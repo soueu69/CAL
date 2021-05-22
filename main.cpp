@@ -137,6 +137,13 @@ void get_path(Graph *graph, vector<Vertex*> hospitals){
                     }
                     cout<<" -> "<<each->get_name();
                 }
+
+                cout<<endl;
+                int distance= vetor[0]->get_dist();
+                cout<<distance;
+
+
+
                 cout<<endl<<endl<<"ARRIVED AT YOUR DESTINATION!";
                 cout<<endl<<"------------------------------------------------------------------------------------------------------------------------"<<endl;
 
@@ -234,16 +241,58 @@ void get_path(Graph *graph, vector<Vertex*> hospitals){
         }
         case 1 :{
             cout<<endl;
-            cout<<"MISSING...";
-            cout<<endl;
+            if(hospitals.size()==1){
+                auto id_hospital = hospitals[0]->get_ID();  //ID hospital
+                graph->floydWarshall(5,10);   // criamos a matriz de todas as distancias entre nodes
+                int auxiliar=100000000;
+                int id_armazem;
+                for(auto armazem : storage){
+                   id_armazem = armazem->get_ID();
+                   auto x =graph->get_distances(id_hospital,id_armazem);
+                   if(x<auxiliar){
+                       auxiliar=x;
+                   }
+                }
+                cout<<".................................................DISPLAYING FULL ROUTE................................................."<<endl;
+                cout<<"-----------------------------------------------------------------------"<<endl<<endl;
+                auto final = graph->floydWarshall(id_hospital,id_armazem);
+                for(auto x : final){
+                    if(x->get_ID()==id_hospital){
+                        cout<<x->get_name();
+                        continue;
+                    }
+                    cout<<x->get_name()<<"->";
+                }
+                cout<<endl;
+                cout<<endl<<"ARRIVED AT YOUR DESTINATION!";
+                cout<<endl<<"---------------------------------------------------------------------"<<endl;
+            }
+            if(hospitals.size()>1){
 
-            cout<<hospitals.size()<<endl;
-            cout<<storage.size();
+                cout<< "NUMBER OF STORAGE: "<< storage.size()<<endl;
+                cout<<"NUMBER OF HOSPITAL: "<<hospitals.size()<<endl;
+
+                for(auto x :hospitals){
+                    for(auto y: storage){
+                        graph->floydWarshall(x->get_ID(),y->get_ID());
+                        auto distancia=graph->get_distances(x->get_ID(),y->get_ID());
+                        cout<<"DISTANCIA: "<< distancia << " from "<< y->get_name()<< " to "<< x->get_name()<<endl;
+                    }
+                }
 
 
 
 
-            break;
+
+
+
+
+
+
+
+
+            }
+
         }
     }
 
@@ -392,10 +441,14 @@ int main() {
     Graph graph;
     read_nodes(&graph);
     read_edges(&graph);
+    graph.floydWarshall(6,9);
+    graph.get_distances(4,5);
+    /*
     while(true){
         auto x = menu(&graph);
         if(!x){
             break;
         }
     }
+     */
 }
