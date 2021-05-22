@@ -285,9 +285,9 @@ vector<Vertex*>  Graph::floydWarshall(int id_inicial, int id_final) {
         for(int i2=0;i2<23;i2++){
             auto value =array[i][i2];  //aux
             insert_distances(i,i2,value);  //aux
-            cout<<" "<<array[i][i2]<<" ";
+            //cout<<" "<<array[i][i2]<<" ";
         }
-        cout<<"!"<<endl;
+        //cout<<endl;
     }
 
     ///GET PATH
@@ -305,7 +305,7 @@ vector<Vertex*>  Graph::floydWarshall(int id_inicial, int id_final) {
     }
     caminho.pop_back();
     caminho.push_back(id_inicial);
-    reverse(caminho.begin(),caminho.end());
+    //reverse(caminho.begin(),caminho.end());
 
     vector<Vertex*> sequencia;
     for(int i =0 ;i<caminho.size();i++){
