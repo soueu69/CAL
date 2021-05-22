@@ -37,7 +37,6 @@ private:
     double dist;   //auxiliary
     Vertex * previous; //auxiliary
 
-    double dist_Floyd;  //distance used in FLOYD
     int ID; //used for Floyd Marshall
 public:
 
@@ -48,13 +47,7 @@ public:
         name=nam;
         ID=c;
     }
-    int get_dist_Floyd(){
-        return dist_Floyd;
-    }
 
-    void set_dist_Floyd(double floy){
-        dist_Floyd=floy;
-    }
 
     int get_ID(){
         return ID;
@@ -164,8 +157,19 @@ public:
 class Graph{
 private:
     vector<Vertex*> vertexes; //main vertex set
+
     vector<Edge*> aux_edges;  //auxiliary
+    int array_name[22][22]; //aux da keeps all distances between points after floyd is called
+
 public:
+    int get_distances(int first,int second){
+        return array_name[first][second];
+    }
+
+    void insert_distances(int first,int second,int result){
+        array_name[first][second]=result;
+    }
+
     Edge* get_edge(int x){
         return aux_edges[x];
     }
@@ -174,9 +178,11 @@ public:
         return aux_edges;
     }
 
+
     void fill_edges(Edge* objeto){
         aux_edges.push_back(objeto);
     }
+
 
     void fill_vector(Vertex * objeto){
         this->vertexes.push_back(objeto);
@@ -190,7 +196,7 @@ public:
     }
 
     vector<Vertex*> dijkstraShortestPath(Vertex * source,Vertex * destiny);
-    vector<Vertex*>  floydWarshall(int id_inicial, int id_final);
+    vector<Vertex*> floydWarshall(int id_inicial, int id_final);
 
 };
 
@@ -243,8 +249,8 @@ vector<Vertex*> Graph::dijkstraShortestPath(Vertex * source,Vertex * destiny) {
 }
 
 vector<Vertex*>  Graph::floydWarshall(int id_inicial, int id_final) {
-    int array[23][23];
-    int path[23][23];
+    int array[22][22];
+    int path[22][22];
     for(int i=0;i<23;i++){
         for(int i2=0;i2<23;i2++){
             array[i][i2]=999;
@@ -274,14 +280,16 @@ vector<Vertex*>  Graph::floydWarshall(int id_inicial, int id_final) {
             }
         }
     }
-    /*
+
     for(int i=0;i<23;i++){
         for(int i2=0;i2<23;i2++){
+            auto value =array[i][i2];  //aux
+            insert_distances(i,i2,value);  //aux
             cout<<" "<<array[i][i2]<<" ";
         }
         cout<<"!"<<endl;
     }
-     */
+
     ///GET PATH
 
     vector<int> caminho;   //guarda caminho percorrido
