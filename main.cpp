@@ -82,6 +82,7 @@ void check_graph_creation(Graph * graph){
     }
 }
 
+
 void get_path(Graph *graph, vector<Vertex*> hospitals){
     //When function is called put all the possible storage centers in tis vector
     vector<Vertex*> storage;
@@ -126,9 +127,10 @@ void get_path(Graph *graph, vector<Vertex*> hospitals){
                         vetor=graph->dijkstraShortestPath(hospitals[0],storage[i]);
                     }
                 }
-                cout<<"..........................................DISPLAYING FULL ROUTE.............................................."<<endl;
-                cout<<"------------------------------------------------------------------------------------------------------------------------";
-                //cout<<"Closest storage to current hospital:  "<<armazem->get_dist()<<" "<<armazem->get_name()<<" to " <<hospitals[0]->get_name()<<endl;
+                cout<<".........................................DISPLAYING FULL ROUTE.................................................";
+                cout<<"----------------------------------------------------------------------------------------------------------------------";
+                cout<<"This path is calculated using 'Dijkstra algorithm'" <<endl;
+                cout<<"Path distance: "<<armazem->get_dist()<<endl;
                 cout<<endl<<"Ideal Path: ";
                 for(auto each : vetor){
                     if(each==armazem){
@@ -138,17 +140,8 @@ void get_path(Graph *graph, vector<Vertex*> hospitals){
                     cout<<" -> "<<each->get_name();
                 }
 
-                cout<<endl;
-                int distance= vetor[0]->get_dist();
-                cout<<distance;
-
-
-
                 cout<<endl<<endl<<"ARRIVED AT YOUR DESTINATION!";
-                cout<<endl<<"------------------------------------------------------------------------------------------------------------------------"<<endl;
-
-
-
+                cout<<endl<<"----------------------------------------------------------------------------------------------------------------------"<<endl;
             }
             if(hospitals.size()>1){
                 cout<<"CALCULATE IDEAL PATH FOR MORE THAN 2 HOSPITALS USING JUST 1 STORAGE CENTER IN ONE RIDE"<<endl;
@@ -188,8 +181,10 @@ void get_path(Graph *graph, vector<Vertex*> hospitals){
                     }
                 }
 
-                cout<<".................................................DISPLAYING FULL ROUTE.................................................";
+                cout<<"................................................DISPLAYING FULL ROUTE................................................";
                 cout<<endl<<"------------------------------------------------------------------------------------------------------------------------";
+                cout<<"This path is calculated using 'Dijkstra algorithm'" <<endl;
+                cout<<"Path distance: "<<dest->get_dist()<<endl;
                 auto vetor1= graph->dijkstraShortestPath(source1,dest);
                 for(auto each : vetor1){
                     if(each->get_importance()=="Storage"){
@@ -216,6 +211,8 @@ void get_path(Graph *graph, vector<Vertex*> hospitals){
                         }
                     }
                     auto show_user= graph->dijkstraShortestPath(hospitals[index] ,last_visited);
+                    cout<<"This path is calculated using 'Dijkstra algorithm'" <<endl;
+                    cout<<"Path distance: "<<last_visited->get_dist()<<endl;
                     for(auto each : show_user){
                         if(each->get_importance()=="Storage"){
                             cout<<each->get_name();
@@ -242,22 +239,24 @@ void get_path(Graph *graph, vector<Vertex*> hospitals){
         case 1 :{
             cout<<endl;
             if(hospitals.size()==1){
-                auto id_hospital = hospitals[0]->get_ID();  //ID hospital
-                graph->floydWarshall(5,10);   // criamos a matriz de todas as distancias entre nodes
-                int auxiliar=100000000;
-                int id_armazem;
-                for(auto armazem : storage){
-                   id_armazem = armazem->get_ID();
-                   auto x =graph->get_distances(id_hospital,id_armazem);
-                   if(x<auxiliar){
-                       auxiliar=x;
-                   }
+
+                graph->floydWarshall(2,8);
+                int distancia=1000000;
+                int id_armazem_escolhido;
+                for(auto armazens : storage){
+                    if(graph->get_distances(armazens->get_ID(),hospitals[0]->get_ID())<distancia){
+                        distancia=graph->get_distances(armazens->get_ID(),hospitals[0]->get_ID());
+                        id_armazem_escolhido=armazens->get_ID();
+                    }
                 }
+                auto caminho = graph->floydWarshall(id_armazem_escolhido,hospitals[0]->get_ID());
+
                 cout<<".................................................DISPLAYING FULL ROUTE................................................."<<endl;
-                cout<<"-----------------------------------------------------------------------"<<endl<<endl;
-                auto final = graph->floydWarshall(id_hospital,id_armazem);
-                for(auto x : final){
-                    if(x->get_ID()==id_hospital){
+                cout<<"------------------------------------------------------------------------------------------------------------------------"<<endl;
+                cout<<"This path is calculated using 'Floyd Warshall algorithm'" <<endl;
+                cout<<"Path distance: "<<distancia<<endl;
+                for(auto x : caminho){
+                    if(x->get_ID()==hospitals[0]->get_ID()){
                         cout<<x->get_name();
                         continue;
                     }
@@ -265,38 +264,90 @@ void get_path(Graph *graph, vector<Vertex*> hospitals){
                 }
                 cout<<endl;
                 cout<<endl<<"ARRIVED AT YOUR DESTINATION!";
-                cout<<endl<<"---------------------------------------------------------------------"<<endl;
+                cout<<endl<<"------------------------------------------------------------------------------------------------------------------------"<<endl;
+
+
             }
             if(hospitals.size()>1){
-
-                cout<< "NUMBER OF STORAGE: "<< storage.size()<<endl;
-                cout<<"NUMBER OF HOSPITAL: "<<hospitals.size()<<endl;
-
-                for(auto x :hospitals){
-                    for(auto y: storage){
-                        graph->floydWarshall(x->get_ID(),y->get_ID());
-                        auto distancia=graph->get_distances(x->get_ID(),y->get_ID());
-                        cout<<"DISTANCIA: "<< distancia << " from "<< y->get_name()<< " to "<< x->get_name()<<endl;
+                    graph->floydWarshall(4,8);
+                    int distancia=1000000;
+                    int id_armazem_escolhido;
+                    int id_hospital_escolhido;
+                    for(auto hospitais : hospitals){
+                        for(auto armazens : storage){
+                            if(graph->get_distances(armazens->get_ID(),hospitais->get_ID())<distancia){
+                                distancia=graph->get_distances(armazens->get_ID(),hospitais->get_ID());
+                                id_armazem_escolhido=armazens->get_ID();
+                                id_hospital_escolhido=hospitais->get_ID();
+                            }
+                        }
                     }
+            auto path = graph->floydWarshall(id_armazem_escolhido,id_hospital_escolhido);
+            cout<<".................................................DISPLAYING FULL ROUTE................................................."<<endl;
+            cout<<"------------------------------------------------------------------------------------------------------------------------";
+            cout<<"This path is calculated using 'Floyd Warshall algorithm'" <<endl<<"Path distance: "<<distancia<<endl<<endl;
+            for(auto x : path){
+                if(x->get_ID()==hospitals[0]->get_ID()){
+                    cout<<x->get_name();
+                    continue;
+                }
+                cout<<x->get_name()<<"->";
+            }
+            cout<<endl;
+            cout<<endl<<"ARRIVED AT YOUR DESTINATION! CALCULATING NEXT PATH...";
+            cout<<endl<<"------------------------------------------------------------------------------------------------------------------------";
+
+            int eliminar;
+            for(int i=0;i < hospitals.size();i++){
+                if(hospitals[i]->get_ID()==id_hospital_escolhido){
+                    eliminar=i;
+                }
+            }
+            hospitals.erase(hospitals.begin()+eliminar);
+            while(true) {
+                if (hospitals.size() == 0) {
+                    break;
                 }
 
+                int distancia2 = 10000000;
+                int chosen_next_hospital;
+                for (auto hospitals_are_left : hospitals) {
+                    if (graph->get_distances(id_hospital_escolhido, hospitals_are_left->get_ID()) < distancia2) {
+                        distancia2 = graph->get_distances(id_hospital_escolhido, hospitals_are_left->get_ID());
+                        chosen_next_hospital = hospitals_are_left->get_ID();
+                    }
+                }
+                auto path2 = graph->floydWarshall(id_hospital_escolhido, chosen_next_hospital);
+                cout<<"This path is calculated using 'Floyd Warshall algorithm'" <<endl;
+                cout<<"Path distance: "<<distancia2<<endl<<endl;
+                for (auto x : path2) {
+                    if (x->get_ID() == hospitals[0]->get_ID()) {
+                        cout << x->get_name();
+                        continue;
+                    }
+                    cout << x->get_name() << "->";
+                }
+                cout << endl;
+                if(hospitals.size()==1){
+                    cout<<endl<<"ARRIVED AT YOUR DESTINATION!";
+                }
+                if(hospitals.size()>1){
+                    cout<<endl<<"ARRIVED AT YOUR DESTINATION! CALCULATING NEXT PATH...";
+                }
+                cout << endl<< "------------------------------------------------------------------------------------------------------------------------";
 
-
-
-
-
-
-
-
-
-
-
+                id_hospital_escolhido = chosen_next_hospital;
+                int eliminar2;
+                for (int i = 0; i < hospitals.size(); i++) {
+                    if (hospitals[i]->get_ID() == id_hospital_escolhido) {
+                        eliminar2 = i;
+                    }
+                }
+                hospitals.erase(hospitals.begin() + eliminar2);
             }
-
+            }
         }
     }
-
-
 }
 
 void choose_destinations(Graph *graph){
@@ -406,13 +457,13 @@ void update_graph(Graph *graph){
     }
 }
 
+
 bool menu(Graph *graph){
-    cout<<"........MENU........"<<endl;
+    cout<<".................MENU................."<<endl;
     cout<<"[0]SET PATH"<<endl;
     cout<<"[1]UPDATE GRAPH"<<endl;
-    cout<<"[2]DISPLAY GRAPH "<<endl;
-    cout<<"[3]EXIT "<<endl;
-    cout<<"...................."<<endl;
+    cout<<"[2]EXIT "<<endl;
+    cout<<"......................................"<<endl;
     int choice;
     cout<<"Choose ID: ";
     cin>>choice;
@@ -426,29 +477,27 @@ bool menu(Graph *graph){
             return true;
         }
         case 2:{
-            cout<<"CHECK GRAPH";
-            return true;
-        }
-        case 3:{
             return false;
+
         }
     }
         return false;
-
 }
+
 
 int main() {
     Graph graph;
     read_nodes(&graph);
     read_edges(&graph);
-    graph.floydWarshall(6,9);
-    graph.get_distances(4,5);
-    /*
+
     while(true){
         auto x = menu(&graph);
         if(!x){
             break;
         }
     }
-     */
+    auto x=graph.floydWarshall(0,2);
+    for(auto y :x){
+        cout<<y->get_name()<<endl;
+    }
 }
