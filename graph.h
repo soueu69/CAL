@@ -26,7 +26,6 @@ private:
     int IDaux;   //auxiliary for updating graph
     int menuID=599;  // menu aux
 
-    bool available =true;  //for checking if it can be used
     string importance;
     string name;
     vector<Edge*> outgoing_edges;
@@ -57,14 +56,6 @@ public:
     }
     int get_IDaux(){
         return IDaux;
-    }
-
-    bool get_availablility(){
-        return available;
-    }
-
-    void set_availablility(bool flag){
-        available=flag;
     }
 
     void set_menuID(int k){
@@ -162,6 +153,7 @@ private:
     int array_name[22][22]; //aux da keeps all distances between points after floyd is called
 
 public:
+
     int get_distances(int first,int second){
         return array_name[first][second];
     }
@@ -170,6 +162,7 @@ public:
         array_name[first][second]=result;
     }
 
+
     Edge* get_edge(int x){
         return aux_edges[x];
     }
@@ -177,7 +170,6 @@ public:
     vector<Edge*> get_edges(){
         return aux_edges;
     }
-
 
     void fill_edges(Edge* objeto){
         aux_edges.push_back(objeto);
@@ -196,7 +188,7 @@ public:
     }
 
     vector<Vertex*> dijkstraShortestPath(Vertex * source,Vertex * destiny);
-    vector<Vertex*> floydWarshall(int id_inicial, int id_final);
+    vector<Vertex*> floydWarshall(int id_inicial,int id_final);
 
 };
 
@@ -218,7 +210,7 @@ vector<Vertex*> Graph::dijkstraShortestPath(Vertex * source,Vertex * destiny) {
                 index=i;                                   // escolhemos o node com menor distancia de todos os nossos nodes(o node source comeca a 0 logo é escolhido)
             }
         }
-        //node->set_visited(true);
+
         visited.push_back(node);                            // colocamos o node com menor distancia no vetor de visitados
         lista.erase(lista.begin()+index);                 // retira da lista o node com menor distancia percorrida e passo a trabalhar com este node
 
@@ -248,75 +240,74 @@ vector<Vertex*> Graph::dijkstraShortestPath(Vertex * source,Vertex * destiny) {
     return path;
 }
 
-vector<Vertex*>  Graph::floydWarshall(int id_inicial, int id_final) {
-    int array[22][22];
-    int path[22][22];
-    for(int i=0;i<23;i++){
-        for(int i2=0;i2<23;i2++){
-            array[i][i2]=999;
-            if(i==i2){
-                array[i][i2]=0;
-                path[i][i2]=i;
+
+vector<Vertex*> Graph::floydWarshall(int id_inicial, int id_final) {
+        int dist[22][22]; //matrix that stores distances
+        int path[22][22]; // stores index path
+        for(int i=0; i<22 ; i++){
+            for(int a2=0; a2<23 ; a2++){
+                if(i==a2){
+                    //insert_distances(i,a2,0);
+                    dist[i][a2]=0;
+                    path[i][a2]=a2;
+                    continue;
+                }
+                //insert_distances(i,a2,50000000);
+                dist[i][a2]=50000000;   //inicializa a matrix
+                path[i][a2]=0;          // iniciliza a matriz path a 0
             }
         }
-    }
-    for(int i2=0; i2< vertexes.size();i2++){  //percorremos todos os nodes
-        auto first_node=vertexes[i2]->get_ID();   // ID do primeiro node
-        for(auto x : vertexes[i2]->get_outgoing_edges()){
-            auto distancia = x->get_lenght();   // distania entre estes dois nodes
-            auto second_node = x->get_destiny_vertex()->get_ID();  //ID do segundo node
-            array[first_node][second_node]=distancia;
-            path[first_node][second_node]=x->get_destiny_vertex()->get_ID();
 
+        for(auto x : vertexes){
+            auto begin = x->get_ID();
+            for( auto edge : x->get_outgoing_edges()){
+                auto desteny = edge->get_destiny_vertex()->get_ID();
+                auto distance = edge->get_lenght();
+                dist[begin][desteny]=distance;  // coloca em cada posicao que temos taamhos da edges o valor na matrx
+                //insert_distances(begin,desteny,distance);
+                path[begin][desteny]=edge->get_destiny_vertex()->get_ID(); // coloca em cada posicao  o id do node destino
+            }
         }
-    }
-    for(int k =0;k<23;k++){
-        for(int i =0;i<23;i++){
-            for(int j =0;j<23;j++){
-                if(array[i][j]>array[i][k]+array[k][j]){
-                    array[i][j]=array[i][k]+array[k][j];
-                    path[i][j]=path[i][k];
+
+        for(int k = 0; k<22 ;k++){
+            for(int i = 0; i<22 ;i++){
+                for(int j = 0; j<22 ;j++){
+                    if(dist[i][j]>dist[i][k]+dist[k][j]){
+                        dist[i][j]=dist[i][k]+dist[k][j];    // algortimo que prenche a matrix com todas as didtancias entre pontos
+                        path[i][j]=path[i][k];
+                    }
                 }
             }
         }
-    }
 
-    for(int i=0;i<23;i++){
-        for(int i2=0;i2<23;i2++){
-            auto value =array[i][i2];  //aux
-            insert_distances(i,i2,value);  //aux
-            //cout<<" "<<array[i][i2]<<" ";
+    for(int i=0;i<22;i++){
+        for(int i2=0;i2<22;i2++){
+            insert_distances(i,i2,dist[i][i2]);
         }
-        //cout<<endl;
     }
 
-    ///GET PATH
 
-    vector<int> caminho;   //guarda caminho percorrido
-    caminho.push_back(id_final);  //coloca a ultima
+    vector<Vertex*> percurso;
+    for(auto x :vertexes){
+        if(id_final==x->get_ID()){
+            percurso.push_back(x);
+        }
+    }
+
     while(true){
-        int tamanho = caminho.size();
-        if(caminho[tamanho-2]==caminho[tamanho-1]){
-            break;
-        }
-        auto anterior = path[id_inicial][id_final];  //calcula o anterior ao final
-        caminho.push_back(anterior);        // coloca no vetor o anterior
-        id_final=anterior;                     //final passa a ser o anterior
-    }
-    caminho.pop_back();
-    caminho.push_back(id_inicial);
-    //reverse(caminho.begin(),caminho.end());
-
-    vector<Vertex*> sequencia;
-    for(int i =0 ;i<caminho.size();i++){
-        auto id = caminho[i];
+        auto nova_posicao=path[id_final][id_inicial];
         for(auto x :vertexes){
-            if(x->get_ID()==id){
-                sequencia.push_back(x);
+            if(x->get_ID()==nova_posicao){
+                percurso.push_back(x);
             }
         }
+        id_final=nova_posicao;
+        if(id_final==id_inicial){
+            break;
+        }
     }
-    return sequencia;
+    reverse(percurso.begin(),percurso.end());
+    return percurso;
 }
 
 #endif //PROJETO_CAL_GRAPH_H
